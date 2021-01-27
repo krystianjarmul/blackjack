@@ -1,9 +1,6 @@
 from src.domain.game import Game, Deck, Player, Mode, Card
 
 
-# TODO ADD POSSIBILITY TO ONE PLAYER GAME
-
-
 def test_game_setting_number_of_players():
     game = Game()
 

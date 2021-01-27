@@ -81,9 +81,15 @@ class BlackJackCLI:
             logger.info('Player %s was added.', player_name)
 
     def enter_players_number(self):
-        players_number = self.input(
-            "Enter number of players: ", 'Invalid answer. Provide an integer.'
-        )
+        while True:
+            players_number = self.input(
+                "Enter number of players: ",
+                'Invalid number. Provide a number bigger than 1.'
+            )
+            if players_number > 1:
+                break
+            logger.error('Invalid number. Provide a number bigger than 1.')
+
         self.game.set_players_number(players_number)
 
     @staticmethod

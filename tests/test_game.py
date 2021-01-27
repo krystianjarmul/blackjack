@@ -42,11 +42,11 @@ def test_deck_draw_a_card():
     assert card == first_card
 
 
-def test_player_takes_card():
+def test_player_hits_card():
     player = Player('player1')
     card = Card(suit='Spades', rank='10')
 
-    player.take_card(card)
+    player.hit(card)
 
     assert player.cards == [card]
     assert player.score == int(card.rank)
@@ -69,8 +69,8 @@ def test_is_last_round_if_one_player_left():
     game.set_player(player2)
     game.set_player(player3)
 
-    player1.fold()
-    player2.fold()
+    player1.stand()
+    player2.stand()
     assert game.is_last_round()
 
 
@@ -83,7 +83,7 @@ def test_it_is_not_last_round_if_only_one_player_fold():
     game.set_player(player2)
     game.set_player(player3)
 
-    player1.fold()
+    player1.stand()
     assert game.is_last_round() is False
 
 
@@ -107,7 +107,7 @@ def test_is_game_over_if_all_players_folded():
     game.set_player(player2)
 
     for plr in game.players:
-        plr.fold()
+        plr.stand()
 
     assert game.is_over()
 

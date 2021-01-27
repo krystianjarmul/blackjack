@@ -25,14 +25,15 @@ class Player:
         self.cards: List[Card] = []
         self.plays = True
 
-    def take_card(self, card: Card):
+    def hit(self, card: Card):
+        logger.info('HIT! "%s %s".', card.rank, card.suit)
         self.cards.append(card)
         self._update_scores()
 
     def _update_scores(self):
         self.score = sum([self._parse_card_rank(c.rank) for c in self.cards])
 
-    def fold(self):
+    def stand(self):
         self.plays = False
 
     @staticmethod
@@ -72,10 +73,9 @@ class Game:
         self.mode = mode
 
     def start(self):
-        logger.info('The domain game has been started.')
+        logger.info('The blackjack game has been started.')
         self.deck = Deck()
         self.deck.shuffle()
-        self.set_players_number(2)
 
     def is_over(self) -> bool:
         too_big_score = any([True for plr in self._players if plr.score > 21])

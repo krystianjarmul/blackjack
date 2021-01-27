@@ -11,7 +11,7 @@ class BlackJackCLI:
             for player in self.game.players:
                 logger.info('Currently playing: %s.', player.name)
                 card = self.game.deck.draw_card()
-                player.take_card(card)
+                player.hit(card)
                 logger.info('"%s %s" has been drawn.', card.rank, card.suit)
                 logger.info("%s's scores: %s.", player.name, player.score)
 
@@ -50,15 +50,14 @@ class BlackJackCLI:
                 )
 
                 if player.score:
-                    opt = self.input('Do you fold? 0 [no] | 1 [yes] ')
+                    opt = self.input('Do you stand? 0 [no] | 1 [yes] ')
                     if opt:
                         logger.info('%s folded. The last draw.', player.name)
-                        player.fold()
+                        player.stand()
                         continue
 
                 card = self.game.deck.draw_card()
-                player.take_card(card)
-                logger.info('"%s %s" has been drawn.', card.rank, card.suit)
+                player.hit(card)
                 logger.info("%s's scores: %s.", player.name, player.score)
 
                 if player.score > 21 or self.game.is_last_round():

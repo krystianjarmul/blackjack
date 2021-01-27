@@ -1,5 +1,5 @@
-from game import Game, Mode
-from config import logger
+from src.blackjack.game import Game, Mode, Player
+from src.config import logger
 
 
 class BlackJackCLI:
@@ -25,6 +25,8 @@ class BlackJackCLI:
 
     def run(self):
         self.game.start()
+        self.enter_players_number()
+        self.enter_players_name()
         self.choose_mode()
         if self.game.mode.name == 'AUTO':
             self.auto_mode()
@@ -73,15 +75,26 @@ class BlackJackCLI:
                 logger.info('The game is over.')
                 break
 
+    def enter_players_name(self):
+        for pn in range(self.game.players_number):
+            player_name = input("Enter player's name: ")
+            self.game.set_player(Player(player_name))
+            logger.info('Player %s was added.', player_name)
+
+    def enter_players_number(self):
+        players_number = self.input(
+            "Enter number of players: ", 'Invalid answer. Provide an integer.'
+        )
+        self.game.set_players_number(players_number)
+
     @staticmethod
-    def input(q: str) -> int:
+    def input(q: str, e: str = 'Invalid answer. Choose 0 or 1.') -> int:
         while True:
             try:
                 ans = int(input(q))
                 break
             except ValueError:
-                logger.error('Invalid answer. Choose between 0 and 1.')
-
+                logger.error(e)
         return ans
 
 

@@ -3,10 +3,9 @@ import random
 from dataclasses import dataclass
 from typing import Set, List, Optional
 
-from config import logger
+from src.config import logger
 
 
-# TODO Separate domain logic from entrypoint
 class Mode(enum.Enum):
     AUTO = 0
     MANUAL = 1
@@ -60,12 +59,6 @@ class Game:
     def set_player(self, player: Player):
         self._players.append(player)
 
-    def enter_players_name(self):
-        for pn in range(self._players_number):
-            player_name = input("Enter player's name: ")
-            self.set_player(Player(player_name))
-            logger.info('Player %s was added.', player_name)
-
     @property
     def players_number(self):
         return self._players_number
@@ -83,7 +76,6 @@ class Game:
         self.deck = Deck()
         self.deck.shuffle()
         self.set_players_number(2)
-        self.enter_players_name()
 
     def is_over(self) -> bool:
         too_big_score = any([True for plr in self._players if plr.score > 21])
@@ -127,7 +119,3 @@ class Deck:
 
     def draw_card(self) -> Card:
         return self.cards.pop(0)
-
-
-if __name__ == '__main__':
-    Game().run()

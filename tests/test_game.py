@@ -1,6 +1,7 @@
-from unittest import mock
+from src.blackjack.game import Game, Deck, Player, Mode, Card
 
-from game import Game, Deck, Player, Mode, Card
+
+# TODO ADD POSSIBILITY TO ONE PLAYER GAME
 
 
 def test_game_setting_number_of_players():
@@ -20,16 +21,6 @@ def test_game_setting_players():
     game.set_player(player2)
 
     assert game.players == [player1, player2]
-
-
-def test_game_entering_players_name():
-    with mock.patch('builtins.input', return_value='test') as input_mock:
-        game = Game()
-        game.set_players_number(2)
-
-        game.enter_players_name()
-
-        assert input_mock.call_count == 2
 
 
 def test_shuffle_a_deck():

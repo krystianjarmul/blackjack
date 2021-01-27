@@ -1,4 +1,4 @@
-from src.blackjack.game import Game, Mode, Player
+from src.domain.game import Game, Mode, Player
 from src.config import logger
 
 

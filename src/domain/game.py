@@ -72,7 +72,7 @@ class Game:
         self.mode = mode
 
     def start(self):
-        logger.info('The blackjack game has been started.')
+        logger.info('The domain game has been started.')
         self.deck = Deck()
         self.deck.shuffle()
         self.set_players_number(2)

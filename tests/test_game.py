@@ -1,4 +1,4 @@
-from src.blackjack.game import Game, Deck, Player, Mode, Card
+from src.domain.game import Game, Deck, Player, Mode, Card
 
 
 # TODO ADD POSSIBILITY TO ONE PLAYER GAME

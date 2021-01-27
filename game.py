@@ -84,7 +84,7 @@ class Game:
         logging.info('The blackjack game has been started.')
         self.deck = Deck()
         self.deck.shuffle()
-        self.set_players_number(2)
+        self.set_players_number(4)
         self.enter_players_name()
 
     def run(self):
@@ -118,7 +118,9 @@ class Game:
             for player in self._players:
                 if not player.plays:
                     continue
-                logging.info('Currently playing: %s.', player.name)
+                logging.info(
+                    'Currently playing: %s[%s].', player.name, player.score
+                )
 
                 if player.score:
                     opt = self.input('Do you fold? 0 [no] | 1 [yes] ')
@@ -139,15 +141,12 @@ class Game:
                 players = [plr.name for plr in self._players]
                 scores = [plr.score for plr in self._players]
 
-                win_score = self._get_win_score(scores)
+                win_score = self.get_win_score(scores)
                 winner = players[scores.index(win_score)]
 
                 logging.info('The winner is %s[%s].', winner, win_score)
                 logging.info('The game is over.')
                 break
-
-    def _one_player_left(self):
-        return not any(plr.plays for plr in self._players)
 
     def choose_mode(self):
         mode = self.input('Choose game mode: 0 [auto] | 1 [manual] ')
@@ -176,7 +175,7 @@ class Game:
         return ans
 
     @staticmethod
-    def _get_win_score(scores: List[int]) -> int:
+    def get_win_score(scores: List[int]) -> int:
         scores = scores.copy()
         while True:
             score = max(scores)
@@ -188,7 +187,7 @@ class Game:
 
     def _is_last_round(self):
         all_players_folded = not any(plr.plays for plr in self._players)
-        one_player_left = not all([plr.plays for plr in self._players])
+        one_player_left = [plr.plays for plr in self._players].count(True) == 1
         return one_player_left or all_players_folded
 
 

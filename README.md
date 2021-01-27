@@ -1,2 +1,2 @@
 # blackjack
-CLI blackjack game in python. 
+CLI simple blackjack game in python. 

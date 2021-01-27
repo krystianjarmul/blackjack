@@ -1,14 +1,12 @@
 import enum
-import logging
 import random
 from dataclasses import dataclass
 from typing import Set, List, Optional
 
-logger = logging.getLogger()
-logging.basicConfig(format='%(asctime)s | %(levelname)s | %(message)s')
-logger.setLevel(logging.INFO)
+from config import logger
 
 
+# TODO Separate domain logic from entrypoint
 class Mode(enum.Enum):
     AUTO = 0
     MANUAL = 1
@@ -66,7 +64,7 @@ class Game:
         for pn in range(self._players_number):
             player_name = input("Enter player's name: ")
             self.set_player(Player(player_name))
-            logging.info('Player %s was added.', player_name)
+            logger.info('Player %s was added.', player_name)
 
     @property
     def players_number(self):
@@ -77,102 +75,23 @@ class Game:
         return self._players
 
     def set_mode(self, mode: Mode):
-        logging.info('Game mode has been changed to %s.', mode.name)
+        logger.info('Game mode has been changed to %s.', mode.name)
         self.mode = mode
 
-    def start_game(self):
-        logging.info('The blackjack game has been started.')
+    def start(self):
+        logger.info('The blackjack game has been started.')
         self.deck = Deck()
         self.deck.shuffle()
-        self.set_players_number(4)
+        self.set_players_number(2)
         self.enter_players_name()
 
-    def run(self):
-        self.start_game()
-        self.choose_mode()
-
-        if self.mode.name == 'AUTO':
-            self._auto_mode()
-        else:
-            self._manual_mode()
-
-    def _auto_mode(self):
-        while True:
-            for player in self._players:
-                logging.info('Currently playing: %s.', player.name)
-                card = self.deck.draw_card()
-                player.take_card(card)
-                logging.info('"%s %s" has been drawn.', card.rank, card.suit)
-                logging.info("%s's scores: %s.", player.name, player.score)
-
-                if player.score > 21:
-                    logging.info('%s[%s] lost.', player.name, player.score)
-                    break
-
-            if self.is_game_over():
-                logging.info('The game is over.')
-                break
-
-    def _manual_mode(self):
-        while True:
-            for player in self._players:
-                if not player.plays:
-                    continue
-                logging.info(
-                    'Currently playing: %s[%s].', player.name, player.score
-                )
-
-                if player.score:
-                    opt = self.input('Do you fold? 0 [no] | 1 [yes] ')
-                    if opt:
-                        logging.info('%s folded. The last draw.', player.name)
-                        player.fold()
-                        continue
-
-                card = self.deck.draw_card()
-                player.take_card(card)
-                logging.info('"%s %s" has been drawn.', card.rank, card.suit)
-                logging.info("%s's scores: %s.", player.name, player.score)
-
-                if player.score > 21 or self._is_last_round():
-                    break
-
-            if self.is_game_over():
-                players = [plr.name for plr in self._players]
-                scores = [plr.score for plr in self._players]
-
-                win_score = self.get_win_score(scores)
-                winner = players[scores.index(win_score)]
-
-                logging.info('The winner is %s[%s].', winner, win_score)
-                logging.info('The game is over.')
-                break
-
-    def choose_mode(self):
-        mode = self.input('Choose game mode: 0 [auto] | 1 [manual] ')
-        if mode:
-            self.set_mode(Mode.MANUAL)
-        else:
-            self.set_mode(Mode.AUTO)
-
-    def is_game_over(self) -> bool:
+    def is_over(self) -> bool:
         too_big_score = any([True for plr in self._players if plr.score > 21])
         all_players_folded = not any(plr.plays for plr in self._players)
         return too_big_score or all_players_folded
 
     def _all_players_folded(self) -> bool:
         return not all([plr.plays for plr in self._players])
-
-    @staticmethod
-    def input(q: str) -> int:
-        while True:
-            try:
-                ans = int(input(q))
-                break
-            except ValueError:
-                logging.error('Invalid answer. Choose between 0 and 1.')
-
-        return ans
 
     @staticmethod
     def get_win_score(scores: List[int]) -> int:
@@ -185,7 +104,7 @@ class Game:
                 break
         return score
 
-    def _is_last_round(self):
+    def is_last_round(self):
         all_players_folded = not any(plr.plays for plr in self._players)
         one_player_left = [plr.plays for plr in self._players].count(True) == 1
         return one_player_left or all_players_folded

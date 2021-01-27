@@ -80,7 +80,7 @@ def test_is_last_round_if_one_player_left():
 
     player1.fold()
     player2.fold()
-    assert game._is_last_round()
+    assert game.is_last_round()
 
 
 def test_it_is_not_last_round_if_only_one_player_fold():
@@ -93,7 +93,7 @@ def test_it_is_not_last_round_if_only_one_player_fold():
     game.set_player(player3)
 
     player1.fold()
-    assert game._is_last_round() is False
+    assert game.is_last_round() is False
 
 
 def test_is_game_over_if_score_higher_than_21():
@@ -105,7 +105,7 @@ def test_is_game_over_if_score_higher_than_21():
 
     game.players[0].score = 22
 
-    assert game.is_game_over()
+    assert game.is_over()
 
 
 def test_is_game_over_if_all_players_folded():
@@ -118,7 +118,7 @@ def test_is_game_over_if_all_players_folded():
     for plr in game.players:
         plr.fold()
 
-    assert game.is_game_over()
+    assert game.is_over()
 
 
 def test_get_win_score():

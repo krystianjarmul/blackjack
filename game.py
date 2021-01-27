@@ -157,9 +157,9 @@ class Game:
             self.set_mode(Mode.AUTO)
 
     def is_game_over(self) -> bool:
-        #  TODO Refactor this method
-        return bool(list(filter(lambda x: x.score > 21, self._players))) or \
-               bool(list(filter(lambda x: not x.plays, self._players)))
+        too_big_score = any([True for plr in self._players if plr.score > 21])
+        all_players_folded = not any(plr.plays for plr in self._players)
+        return too_big_score or all_players_folded
 
     def _all_players_folded(self) -> bool:
         return not all([plr.plays for plr in self._players])

@@ -68,3 +68,38 @@ def test_select_game_mode():
     game.set_mode(Mode.MANUAL)
     assert game.mode == Mode.MANUAL
 
+
+def test_is_last_round_if_one_player_left():
+    game = Game()
+    player1 = Player('player1')
+    player2 = Player('player2')
+    game.set_player(player1)
+    game.set_player(player2)
+
+    player1.fold()
+    assert game._is_last_round()
+
+
+def test_is_game_over_if_score_higher_than_21():
+    game = Game()
+    player1 = Player('player1')
+    player2 = Player('player2')
+    game.set_player(player1)
+    game.set_player(player2)
+
+    game.players[0].score = 22
+
+    assert game.is_game_over()
+
+
+def test_is_game_over_if_all_players_folded():
+    game = Game()
+    player1 = Player('player1')
+    player2 = Player('player2')
+    game.set_player(player1)
+    game.set_player(player2)
+
+    for plr in game.players:
+        plr.fold()
+
+    assert game.is_game_over()
